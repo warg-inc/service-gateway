@@ -1,0 +1,20 @@
+[project]
+name = "gateway-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi[standart]>=0.128.8",
+    "uvicorn>=0.39.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.13"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+sources = ["src"]                  # ← важная часть
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/"]
