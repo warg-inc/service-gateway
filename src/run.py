@@ -1,5 +1,3 @@
-from src.setup.app_factory import create_web_app
-
 
 
 
