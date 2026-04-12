@@ -1,16 +1,21 @@
-from src.application.dto.user import UserResponseDTO
+from src.application.dto.user import RegisterUserRequestDTO, RegisterUserResponseDTO
 from src.infrastructure.clients.grpc.base import BaseGRPCClient
-from src.infrastructure.clients.grpc.mappers.user_mapper import user_from_proto
-from src.protos.generated import user_pb2_grpc, user_pb2
+from src.protos.generated import user_pb2_grpc, user_pb2, auth_pb2_grpc, auth_pb2
 
 
 class AuthGRPCClient(BaseGRPCClient):
     def __init__(self, channel):
-        self.stub = user_pb2_grpc.UserServiceStub(channel)
+        self.user_stub = user_pb2_grpc.UserServiceStub(channel)
+        self.auth_stub = auth_pb2_grpc.AuthServiceStub(channel)
 
-    async def get_user(self, user_id: str) -> UserResponseDTO:
-        request = user_pb2.GetUserRequest(user_id=user_id)
+    async def register_user(self, dto: RegisterUserRequestDTO) -> RegisterUserResponseDTO:
+        request = auth_pb2.RegisterRequest(
+            email=dto.email,
+            surname=dto.surname,
+            name=dto.name,
+            password=dto.password
+        )
 
-        response: user_pb2.GetUserResponse = await self._call(self.stub.GetUser, request)
+        response: auth_pb2.RegisterResponse = await self._call(self.auth_stub.RegisterUser, request)
 
-        return user_from_proto(response)
+        return RegisterUserResponseDTO(success=response.success)

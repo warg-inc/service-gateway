@@ -7,7 +7,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "src.setup.app_factory:create_web_app",
         factory=True,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         reload=True,
         reload_dirs=["src"],

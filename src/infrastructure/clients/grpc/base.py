@@ -1,5 +1,12 @@
 import grpc
 
+from src.application.exceptions.grpc_exceptions import (
+    NotFoundError,
+    ServiceUnavailableError,
+    AlreadyExistsError,
+    InvalidArgumentError,
+    GRPCError,
+)
 
 
 class BaseGRPCClient:
@@ -14,13 +21,19 @@ class BaseGRPCClient:
 
         except grpc.aio.AioRpcError as e:
             code = e.code()
+            details = e.details()
 
             if code == grpc.StatusCode.NOT_FOUND:
-                raise Exception("Resource not found")
+                raise NotFoundError(details)
 
             if code == grpc.StatusCode.UNAVAILABLE:
-                raise Exception("Service unavailable")
+                raise ServiceUnavailableError(details)
 
-            raise Exception(f"gRPC error: {code.name}")
+            if code == grpc.StatusCode.ALREADY_EXISTS:
+                raise AlreadyExistsError(details)
 
+            if code == grpc.StatusCode.INVALID_ARGUMENT:
+                raise InvalidArgumentError(details)
 
+            # 🔥 fallback
+            raise GRPCError(f"{code.name}: {details}")

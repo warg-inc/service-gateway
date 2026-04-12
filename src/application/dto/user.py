@@ -1,7 +1,13 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
-
-
-class UserResponseDTO(BaseModel):
-    id: str
+@dataclass(frozen=True)
+class RegisterUserRequestDTO:
+    email: str
+    surname: str
     name: str
+    password: str
+
+
+@dataclass(frozen=True)
+class RegisterUserResponseDTO:
+    success: bool
