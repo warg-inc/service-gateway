@@ -9,6 +9,17 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 COPY src/ ./src/
 
+RUN mkdir -p ./src/protos/generated && \
+    touch ./src/protos/generated/__init__.py && \
+    ./.venv/bin/python -m grpc_tools.protoc \
+    -I./src/protos \
+    --python_out=./src/protos/generated \
+    --grpc_python_out=./src/protos/generated \
+    ./src/protos/auth.proto \
+    ./src/protos/user.proto && \
+    sed -i 's/^import \(.*_pb2\) as/from src.protos.generated import \1 as/' \
+    ./src/protos/generated/*_pb2_grpc.py
+
 RUN useradd -m appuser
 RUN chown -R appuser:appuser /app
 
