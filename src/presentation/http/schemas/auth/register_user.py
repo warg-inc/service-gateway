@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr, Field
 
 
+
+
 class RegisterRequestSchema(BaseModel):
     email: EmailStr
     surname: str = Field(min_length=1, max_length=100)

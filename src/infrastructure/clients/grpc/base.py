@@ -5,6 +5,7 @@ from src.application.exceptions.grpc_exceptions import (
     ServiceUnavailableError,
     AlreadyExistsError,
     InvalidArgumentError,
+    UnauthenticatedError,
     GRPCError,
 )
 
@@ -34,6 +35,9 @@ class BaseGRPCClient:
 
             if code == grpc.StatusCode.INVALID_ARGUMENT:
                 raise InvalidArgumentError(details)
+
+            if code == grpc.StatusCode.UNAUTHENTICATED:
+                raise UnauthenticatedError(details)
 
             # 🔥 fallback
             raise GRPCError(f"{code.name}: {details}")

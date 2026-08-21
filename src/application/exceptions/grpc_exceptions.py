@@ -1,7 +1,3 @@
-
-
-
-
 class GRPCError(Exception):
     pass
 
@@ -19,4 +15,8 @@ class AlreadyExistsError(GRPCError):
 
 
 class InvalidArgumentError(GRPCError):
+    pass
+
+
+class UnauthenticatedError(GRPCError):
     pass
